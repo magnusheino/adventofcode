@@ -86,7 +86,11 @@ for intersection in intersections:
     y = intersection[1]
     distances[x, y] = abs(x) + abs(y)
 
-print(min(distances.values()))
+minimum_distance = min(distances.values())
+
+assert minimum_distance == 709
+
+print("Part 1:", minimum_distance)
 
 
 def wireStepsToIntersection(intersection, wire):
@@ -133,4 +137,8 @@ for intersection in intersections:
     totalSteps = totalSteps + wireStepsToIntersection(intersection, wire2)
     steps.append(totalSteps)
 
-print(min(steps))
+minimum_steps = min(steps)
+
+assert minimum_steps == 13836
+
+print("Part 2:", min(steps))

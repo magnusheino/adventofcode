@@ -12,9 +12,10 @@ def count(match_condition):
     return count
 
 
-print(
-    "Part 1:",
-    count(lambda match: match),
-    "Part 2:",
-    count(lambda match: len(match) == 2),
-)
+part_1 = count(lambda match: match)
+assert part_1 == 579
+print("Part 1:", part_1)
+
+part_2 = count(lambda match: len(match) == 2)
+assert part_2 == 358
+print("Part 2:", part_2)
