@@ -7,7 +7,7 @@ import threading
 import logging
 
 logging.basicConfig(
-    level=logging.DEBUG, format="(%(threadName)-10s) %(message)s",
+    level=logging.INFO, format="(%(threadName)-10s) %(message)s",
 )
 
 
@@ -161,14 +161,23 @@ class Computer(threading.Thread):
                 raise ValueError(opcode)
 
 
-input = Queue()
-output = Queue()
-computer = Computer("Computer", input, output)
+def boost(input_value):
+    input = Queue()
+    output = Queue()
+    computer = Computer("Computer", input, output)
 
-input.put(1)
+    input.put(input_value)
 
-computer.run()
-# computer.start()
-# computer.join()
+    computer.start()
+    computer.join()
 
-print(output.get_nowait())
+    return output.get_nowait()
+
+
+part1 = boost(1)
+assert part1 == 4234906522
+print("Part 1:", part1)
+
+part2 = boost(2)
+assert part2 == 60962
+print("Part 2:", part2)
