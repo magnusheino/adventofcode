@@ -148,15 +148,13 @@ class Amplifiers:
         self.Din = Queue()
         self.Ein = Queue()
         self.A = Amplifier("A", self.Ain, self.Bin)
-        self.A.start()
         self.B = Amplifier("B", self.Bin, self.Cin)
-        self.B.start()
         self.C = Amplifier("C", self.Cin, self.Din)
-        self.C.start()
         self.D = Amplifier("D", self.Din, self.Ein)
-        self.D.start()
         self.E = Amplifier("E", self.Ein, self.Ain)
-        self.E.start()
+
+        for amplifier in [self.A, self.B, self.C, self.D, self.E]:
+            amplifier.start()
 
     def get_thrust_signal(self, phase_setting):
         logging.info("Running amplifiers with phase setting %s", phase_setting)
@@ -167,21 +165,18 @@ class Amplifiers:
         self.Ein.put(phase_setting[4])
 
         self.Ain.put(0)
-        self.A.join()
-        self.B.join()
-        self.C.join()
-        self.D.join()
-        self.E.join()
+        for amplifier in [self.A, self.B, self.C, self.D, self.E]:
+            amplifier.join()
         logging.info("All amplifiers have exited")
         result = self.Ain.get_nowait()
         logging.info("Result: %s", result)
         return result
 
 
-def get_max_thrust_signal():
+def get_max_thrust_signal(phase_range):
     signals = {}
 
-    for phase_setting in permutations(range(5)):
+    for phase_setting in permutations(phase_range):
         signal = Amplifiers().get_thrust_signal(phase_setting)
         signals[signal] = phase_setting
 
@@ -189,8 +184,14 @@ def get_max_thrust_signal():
     return (signals[maxium_signal], maxium_signal)
 
 
-phase_setting, signal = get_max_thrust_signal()
+phase_setting, signal = get_max_thrust_signal(range(5))
 assert phase_setting == (3, 1, 4, 2, 0)
 assert signal == 92663
 print("Part 1: Phase setting", phase_setting, "gives max signal", signal)
+
+
+phase_setting, signal = get_max_thrust_signal(range(5, 10))
+assert phase_setting == (7, 8, 6, 9, 5)
+assert signal == 14365052
+print("Part 2: Phase setting", phase_setting, "gives max signal", signal)
 
